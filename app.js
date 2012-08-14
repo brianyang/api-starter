@@ -48,6 +48,12 @@
     });
   });
 
+  app.get('/all', function(req, res) {
+    return Project.find({}, function(error, data) {
+      return res.send('list all');
+    });
+  });
+
   app.get('/remove/:id', function(req, res) {
     Project.find({
       _id: req.params.id
@@ -74,6 +80,7 @@
         return res.json(error);
       } else {
         return res.json(data);
+
         /*
             app.get('/addhobby/:username/:hobby', (req, res) -> {
               Person.findOne{ username: req.params.username }, (error, person) ->
@@ -94,7 +101,7 @@
                             }
                         })
                     }
-        
+
             })
         */
       }
@@ -102,5 +109,7 @@
   });
 
   app.listen(process.env.PORT || 3001);
+
+  console.log("listening on port %d", app.address().port);
 
 }).call(this);

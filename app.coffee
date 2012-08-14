@@ -33,9 +33,22 @@
 
     Project = mongoose.model 'Project', Project
 
+
+    app.set 'view engine', 'jade'
+    app.set 'views', __dirname + '/views'
+    app.use express.static(__dirname + '/public')
+
+
+    getAll = {}
+    getAll.projects = (req,res) ->
+      console.log 'getAll'
+      res.render('foo.jade', {foo:'bar'})
+
     app.get '/', (req,res) ->
       Project.find {},(error, data) ->
         res.json(data)
+
+    app.get '/all', getAll.projects
 
 
     app.get '/remove/:id', (req,res) ->
@@ -100,6 +113,7 @@
 
     })
     ###
+
 
     app.listen(process.env.PORT || 3001)
     #console.log("listening on port %d", app.address().port)
