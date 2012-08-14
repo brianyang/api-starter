@@ -1,5 +1,5 @@
 (function() {
-  var Hobby, ObjectId, Person, Schema, app, express, mongoose;
+  var Hobby, ObjectId, Project, Schema, app, express, mongoose;
 
   express = require('express');
 
@@ -7,7 +7,7 @@
 
   mongoose = require('mongoose');
 
-  mongoose.connect('mongodb://127.0.0.1/sampledb');
+  mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://127.0.0.1/sampledb');
 
   Schema = mongoose.Schema;
 
@@ -21,7 +21,7 @@
     }
   });
 
-  Person = new Schema({
+  Project = new Schema({
     first_name: {
       type: String,
       trim: true
@@ -40,19 +40,27 @@
     eye_color: String
   });
 
-  Person = mongoose.model('Person', Person);
+  Project = mongoose.model('Project', Project);
 
   app.get('/', function(req, res) {
-    return Person.find({}, function(error, data) {
+    return Project.find({}, function(error, data) {
       return res.json(data);
     });
   });
 
   app.get('/remove/:id', function(req, res) {
-    Person.find({
+    Project.find({
       _id: req.params.id
     }).remove();
     return res.send('done');
+  });
+
+  app.get('/show/:id', function(req, res) {
+    return Project.findOne({
+      _id: req.params.id
+    }, function(error, doc) {
+      return res.json(doc);
+    });
   });
 
   app.get('/addproject/:project_title', function(req, res) {
@@ -60,7 +68,7 @@
     project_data = {
       project_title: req.params.project_title
     };
-    person = new Person(project_data);
+    person = new Project(project_data);
     return person.save(function(error, data) {
       if (error) {
         return res.json(error);
@@ -93,7 +101,7 @@
     });
   });
 
-  app.listen(3001);
+  app.listen(process.env.PORT || 3001);
 
   console.log("listening on port %d", app.address().port);
 

@@ -8,7 +8,17 @@
     },
     "dependencies": {
         "coffee-script": "",
+        "less": "",
+        "stylus": "",
+        "nib": "",
+        "connect-assets": "",
         "express": "",
-        "mongoose": ""
+        "jade": "",
+        "mongoose": "",
+        "redis": "",
+        "async": "",
+        "underscore": "",
+        "oauth": "",
+        "redis-url": "0.0.1"
     }
 }
