@@ -42,7 +42,7 @@
     getAll = {}
     getAll.projects = (req,res) ->
       console.log 'getAll'
-      res.render('foo.jade', {foo:'bar'})
+      res.render('layout.jade', {foo:'bar'})
 
     app.get '/', (req,res) ->
       Project.find {},(error, data) ->
