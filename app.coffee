@@ -3,7 +3,6 @@
     mongoose = require 'mongoose'
 
     mongoose.connect process.env.MONGOHQ_URL or 'mongodb://127.0.0.1/sampledb'
-    #mongoose.connect 'mongodb://127.0.0.1/sampledb'
 
     Schema = mongoose.Schema
     ObjectId = Schema.ObjectID
@@ -36,24 +35,23 @@
 
     app.set 'view engine', 'jade'
     app.set 'views', __dirname + '/views'
-    app.use express.static(__dirname + '/public')
+    app.use express.static __dirname + '/public'
 
 
     getAll = {}
     getAll.projects = (req,res) ->
-      console.log 'getAll'
-      res.render('layout.jade', {foo:'bar'})
+      res.render 'layout.jade', {foo:'bar'}
 
     app.get '/', (req,res) ->
       Project.find {},(error, data) ->
-        res.json(data)
+        res.json data
 
     app.get '/all', getAll.projects
 
 
     app.get '/remove/:id', (req,res) ->
       Project.find({ _id: req.params.id }).remove()
-      res.send('done')
+      res.send 'done'
 
     app.get '/show/:id', (req,res) ->
       Project.findOne { _id: req.params.id },(error, doc) ->
@@ -67,54 +65,10 @@
       person = new Project(project_data)
       person.save (error, data) ->
         if(error)
-          res.json(error)
+          res.json error
         else
-          res.json(data)
-
-
-    #app.get '/adduser/:first/:last/:project_title', (req, res) ->
-      #person_data =
-        #first_name: req.params.first
-        #last_name: req.params.last
-        #project_title: req.params.project_title
-
-      #person = new Person(person_data)
-      #person.save (error, data) ->
-        #if(error)
-          #res.json(error)
-        #else
-          #res.json(data)
-
-
-
-
-
-
-          ###
-    app.get('/addhobby/:username/:hobby', (req, res) -> {
-      Person.findOne{ username: req.params.username }, (error, person) ->
-            if(error){
-                res.json(error)
-            }
-            else if(person == null){
-                res.json('no such user!')
-            }
-            else{
-                person.hobbies.push({ name: req.params.hobby })
-                person.save( (error, data) -> {
-                    if(error){
-                        res.json(error)
-                    }
-                    else{
-                        res.json(data)
-                    }
-                })
-            }
-
-    })
-    ###
+          res.json data
 
 
     app.listen(process.env.PORT || 3001)
-    #console.log("listening on port %d", app.address().port)
 
