@@ -2,7 +2,8 @@
     app = express.createServer()
     mongoose = require 'mongoose'
 
-    mongoose.connect 'mongodb://127.0.0.1/sampledb'
+    mongoose.connect 'process.env.MONGOHQ_URL'
+    #mongoose.connect 'mongodb://127.0.0.1/sampledb'
 
     Schema = mongoose.Schema
     ObjectId = Schema.ObjectID
