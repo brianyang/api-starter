@@ -13,7 +13,7 @@
           required: true
           trim: true
 
-    Person = new Schema
+    Project = new Schema
       first_name:
         type: String
         #required: true
@@ -30,27 +30,27 @@
       eye_color: String
 
 
-    Person = mongoose.model 'Person', Person
+    Project = mongoose.model 'Project', Project
 
     app.get '/', (req,res) ->
-      Person.find {},(error, data) ->
+      Project.find {},(error, data) ->
         res.json(data)
 
 
     app.get '/remove/:id', (req,res) ->
-      Person.find({ _id: req.params.id }).remove()
+      Project.find({ _id: req.params.id }).remove()
       res.send('done')
 
-      #Person.findOne { username: req.params.username },(error, person) ->
-        #res.json(person)
-        #res.remove()
+    app.get '/show/:id', (req,res) ->
+      Project.findOne { _id: req.params.id },(error, doc) ->
+        res.json doc
 
 
     app.get '/addproject/:project_title', (req, res) ->
       project_data =
         project_title: req.params.project_title
 
-      person = new Person(project_data)
+      person = new Project(project_data)
       person.save (error, data) ->
         if(error)
           res.json(error)
