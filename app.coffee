@@ -15,14 +15,13 @@
 
     Person = new Schema
       first_name:
-          type: String
-          required: true
-          trim: true
+        type: String
+        #required: true
+        trim: true
       last_name:
         type: String
-        required: true
         trim: true
-      username:
+      project_title:
         type: String
         required: true
         trim: true
@@ -38,19 +37,43 @@
         res.json(data)
 
 
+    app.get '/remove/:id', (req,res) ->
+      Person.find({ _id: req.params.id }).remove()
+      res.send('done')
 
-    app.get '/adduser/:first/:last/:username', (req, res) ->
-      person_data =
-        first_name: req.params.first
-        last_name: req.params.last
-        username: req.params.username
+      #Person.findOne { username: req.params.username },(error, person) ->
+        #res.json(person)
+        #res.remove()
 
-      person = new Person(person_data)
+
+    app.get '/addproject/:project_title', (req, res) ->
+      project_data =
+        project_title: req.params.project_title
+
+      person = new Person(project_data)
       person.save (error, data) ->
         if(error)
           res.json(error)
         else
           res.json(data)
+
+
+    #app.get '/adduser/:first/:last/:project_title', (req, res) ->
+      #person_data =
+        #first_name: req.params.first
+        #last_name: req.params.last
+        #project_title: req.params.project_title
+
+      #person = new Person(person_data)
+      #person.save (error, data) ->
+        #if(error)
+          #res.json(error)
+        #else
+          #res.json(data)
+
+
+
+
 
 
           ###
