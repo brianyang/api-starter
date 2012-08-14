@@ -1,5 +1,5 @@
 (function() {
-  var Hobby, ObjectId, Project, Schema, app, express, mongoose;
+  var Hobby, ObjectId, Project, Schema, app, express, getAll, mongoose;
 
   express = require('express');
 
@@ -42,17 +42,28 @@
 
   Project = mongoose.model('Project', Project);
 
+  app.set('view engine', 'jade');
+
+  app.set('views', __dirname + '/views');
+
+  app.use(express.static(__dirname + '/public'));
+
+  getAll = {};
+
+  getAll.projects = function(req, res) {
+    console.log('getAll');
+    return res.render('foo.jade', {
+      foo: 'bar'
+    });
+  };
+
   app.get('/', function(req, res) {
     return Project.find({}, function(error, data) {
       return res.json(data);
     });
   });
 
-  app.get('/all', function(req, res) {
-    return Project.find({}, function(error, data) {
-      return res.send('list all');
-    });
-  });
+  app.get('/all', getAll.projects);
 
   app.get('/remove/:id', function(req, res) {
     Project.find({
@@ -80,7 +91,6 @@
         return res.json(error);
       } else {
         return res.json(data);
-
         /*
             app.get('/addhobby/:username/:hobby', (req, res) -> {
               Person.findOne{ username: req.params.username }, (error, person) ->
@@ -101,7 +111,7 @@
                             }
                         })
                     }
-
+        
             })
         */
       }
@@ -109,7 +119,5 @@
   });
 
   app.listen(process.env.PORT || 3001);
-
-  console.log("listening on port %d", app.address().port);
 
 }).call(this);
