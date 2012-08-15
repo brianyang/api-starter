@@ -1,5 +1,5 @@
     express = require 'express'
-    app = express.createServer()
+    app = express()
     mongoose = require 'mongoose'
     request = require 'request'
 
@@ -74,29 +74,36 @@
     redirect.getCoverArt = (req,res) ->
       serviceType = 'getCoverArt'
       itemId = req.params.itemId
-      console.log itemId
-      #url = 'http://by.subsonic.org/rest/' + serviceType + '.view?u=brian&p=home&v=1.1.0&c=myapp&f=json&id=' + itemId
 
       url = 'http://by.subsonic.org/rest/getCoverArt.view?u=brian&p=home&v=1.1&c=myapp&f=json&id=633a5c55736572735c625c4d757369635c736f727465642062656174735c44616e63655c39307320436c7562204d6567616d69782d3243442d323031315c636f7665722e6a7067'
+      url = 'http://by.subsonic.org' + '/rest/getCoverArt.view?u=brian&p=home&v=1.1.0&c=myapp&f=json&id=' + itemId
+      exampleUrl = 'http://192.168.1.106/rest/getCoverArt.view?u=brian&p=home&v=1.1.0&c=myapp&f=json&id=633a5c55736572735c625c4d757369635c6e65775c4c696c5f5761796e655f542d5061696e2d542d5761796e652d323031322d4154585c636f7665722e6a7067'
+
       request url, (error,response,body) ->
-        #res.send body if !error && response.statusCode == 200
-        res.set 'Content-Type', 'image/jpg'
-        res.send(body)
-        console.log body
+        console.log response
+
+    redirect.idView = (req,res) ->
+      console.log req.params.itemId
+      res.render 'layout.jade', {type:req.params.itemId}
 
     getAll.projects = (req,res) ->
-      res.render 'layout.jade', {foo:'bar'}
+      res.render 'layout.jade', {type:'foo'}
+
+    getAll.music = (req,res) ->
+      res.render 'layout.jade', {type:'music'}
 
     app.get '/', (req,res) ->
-      Project.find {},(error, data) ->
+      Project.find {},(errdor, data) ->
         res.json data
 
     app.get '/all', getAll.projects
+    app.get '/allMusic', getAll.music
 
     app.get '/getMusicDir/:itemId', redirect.musicDir
-    app.get '/getMusicFolder', redirect.musicFolder
+    app.get '/getMusicFolders', redirect.musicFolder
     app.get '/getIndexes/:musicFolderId', redirect.getIndexes
     app.get '/getCoverArt/:itemId', redirect.getCoverArt
+    app.get '/idView/:itemId', redirect.idView
 
     app.get '/remove/:id', (req,res) ->
       Project.find({ _id: req.params.id }).remove()
